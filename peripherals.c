@@ -255,6 +255,42 @@ void initADC(void) {
     ADC12CTL0 |= ADC12ENC;
 }
 
+void DACinit(void) {
+    DAC_PORT_LDAC_SEL &= ~DAC_PIN_LDAC;
+    DAC_PORT_LDAC_DIR |= DAC_PIN_LDAC;
+    DAC_PORT_LDAC_OUT |= DAC_PIN_LDAC;
+
+    DAC_PORT_CS_SEL &= ~DAC_PIN_CS;
+    DAC_PORT_CS_DIR |= DAC_PIN_CS;
+    DAC_PORT_CS_OUT |= DAC_PIN_CS;
+}
+
+void DACsend(unsigned int code) {
+    DAC_PORT_CS_OUT &= ~DAC_PIN_CS;
+
+    code |= 0x3000;
+
+    uint8_t lo_byte = (unsigned char)(code & 0x00FF);
+    uint8_t hi_byte = (unsigned char)((code & 0xFF00) >> 8);
+
+    DAC_SPI_REG_TXBUF = hi_byte;
+
+    while (!(DAC_SPI_REG_IFG & UCTXIFG)) {
+        _no_operation();
+    }
+
+    DAC_SPI_REG_TXBUF = lo_byte;
+
+    while (!(DAC_SPI_REG_IFG & UCTXIFG)) {
+            _no_operation();
+    }
+
+    DAC_PORT_CS_OUT |= DAC_PIN_CS;
+
+    DAC_PORT_LDAC_OUT &= ~DAC_PIN_CS;
+    __delay_cycles(10);
+    DAC_PORT_LDAC_OUT |= DAC_PIN_LDAC;
+}
 /*
 void setupSPI_DAC(void)
 {
