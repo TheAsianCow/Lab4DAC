@@ -60,6 +60,7 @@
 
 // Globals
 extern tContext g_sContext;	// user defined type used by graphics library
+unsigned long int pos;
 
 // Prototypes for functions defined implemented in peripherals.c
 
@@ -75,5 +76,10 @@ void BuzzerOff(void);
 
 void configKeypad(void);
 unsigned char getKey(void);
+
+void configBtn(void);
+unsigned char getBtn(void);
+
+void initADC(void);
 
 #endif /* PERIPHERALS_H_ */

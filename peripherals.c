@@ -188,6 +188,36 @@ unsigned char getKey(void)
     return(ret_val);
 }
 
+void configBtn(void){
+
+    //Configure buttons for I/O
+    P7SEL &= ~(BIT4|BIT0);
+    P3SEL &= ~(BIT6);
+    P2SEL &= ~(BIT2);
+
+    P7DIR &= ~(BIT4 | BIT0);
+    P3DIR &= ~(BIT6);
+    P2DIR &= ~(BIT2);
+
+    P7REN |=  (BIT4 | BIT0);
+    P3REN |=  (BIT6);
+    P2REN |=  (BIT2);
+
+    P7OUT |=  (BIT4 | BIT0);
+    P3OUT |=  (BIT6);
+    P2OUT |=  (BIT2);
+}
+
+unsigned char getBtn(void){
+    char out = 0;
+
+    if(!(P7IN & BIT0)) out |= BIT0;
+    if(!(P7IN & BIT4)) out |= BIT4;
+    if(!(P3IN & BIT6)) out |= BIT6;
+    if(!(P2IN & BIT2)) out |= BIT2;
+
+    return out;
+}
 
 void configDisplay(void)
 {
@@ -210,6 +240,19 @@ void configDisplay(void)
     Graphics_setFont(&g_sContext, &g_sFontFixed6x8);
     Graphics_clearDisplay(&g_sContext);
     Graphics_flushBuffer(&g_sContext);
+}
+
+void initADC(void) {
+    ADC12CTL0 &= ~ADC12ENC;
+    ADC12CTL0 = ADC12SHT0_9|ADC12REFON|ADC12ON;
+    ADC12CTL1 = ADC12SHP;
+    ADC12MCTL0 = ADC12SREF_0|ADC12INCH_0;
+    ADC12IE = BIT1;
+
+    P6SEL |= BIT0;
+    P6DIR |= BIT0;
+    __delay_cycles(100);
+    ADC12CTL0 |= ADC12ENC;
 }
 
 /*
@@ -242,4 +285,12 @@ __interrupt void TIMER1_A0_ISR (void)
 	// Display is using Timer A1
 	// Not sure where Timer A1 is configured?
 	Sharp96x96_SendToggleVCOMCommand();  // display needs this toggle < 1 per sec
+}
+
+//------------------------------------------------------------------------------
+//ADC12 Interrupt Service Routine
+//------------------------------------------------------------------------------
+#pragma vector=ADC12_VECTOR
+__interrupt void ADC12_ISR(void){
+    pos = ADC12MEM0 & 0x0FFF;
 }

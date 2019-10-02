@@ -16,4 +16,13 @@ void main(void){
         initLeds();
         configDisplay();
         configKeypad();
+        initADC();
+        configBtn();
+
+        unsigned char currBtn;
+
+        for(;;){
+            ADC12CTL0 |= ADC12SC;
+            currBtn = getBtn();
+        }
 }
