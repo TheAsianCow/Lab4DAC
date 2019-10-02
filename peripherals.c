@@ -255,7 +255,7 @@ void initADC(void) {
     ADC12CTL0 |= ADC12ENC;
 }
 
-void DACinit(void) {
+void initDAC(void) {
     DAC_PORT_LDAC_SEL &= ~DAC_PIN_LDAC;
     DAC_PORT_LDAC_DIR |= DAC_PIN_LDAC;
     DAC_PORT_LDAC_OUT |= DAC_PIN_LDAC;
