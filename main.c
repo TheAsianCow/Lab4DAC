@@ -12,7 +12,8 @@
 // Main
 void main(void){
         WDTCTL = WDTPW | WDTHOLD;
-
+        REFCTL0 &= ~REFMSTR;
+        _BIS_SR(GIE);
         initLeds();
         configDisplay();
         configKeypad();
