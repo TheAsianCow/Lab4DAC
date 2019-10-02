@@ -19,7 +19,7 @@ void main(void){
         initADC();
         configBtn();
 
-        unsigned int mode;
+        unsigned int mode = 0;
         unsigned char currBtn, currKey;
 
         for(;;){
