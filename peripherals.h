@@ -82,4 +82,6 @@ unsigned char getBtn(void);
 
 void initADC(void);
 
+void DACinit(void);
+void DACsend(unsigned int code);
 #endif /* PERIPHERALS_H_ */
