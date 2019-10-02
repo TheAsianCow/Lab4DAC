@@ -271,7 +271,7 @@ void DACsend(unsigned int code) {
     code |= 0x3000;
 
     uint8_t lo_byte = (unsigned char)(code & 0x00FF);
-    uint8_t hi_byte = (unsigned char)((code & 0xFF00) >> 8);
+    uint8_t hi_byte = (unsigned char)(code >> 8) & 0x00FF;
 
     DAC_SPI_REG_TXBUF = hi_byte;
 
