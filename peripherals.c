@@ -244,8 +244,12 @@ void configDisplay(void)
 
 void startTimerA2(int freq) {
     TA2CTL  = (TASSEL__ACLK|ID__1|MC__UP);
-    if(mode==2) TA2CCR0 = 32768/freq/2-1;
-    if(mode==3) TA2CCR0 = 32768/freq/50-1;
+    if(mode==2){
+        TA2CCR0 = 32768/freq/2-1;
+    }
+    if(mode==3){
+        TA2CCR0 = 32768/(freq*50)-1;
+    }
     TA2CCTL0 = CCIE; // IE
 }
 
@@ -344,7 +348,8 @@ __interrupt void Timer_A2_ISR(void) {
         else DACsend(0);
     }
     if(mode==3){
-       DACsend(timerCount%50*82);
+        if(timerCount>53) timerCount=0;
+        DACsend(timerCount*77);
     }
     timerCount++;
 }
