@@ -257,15 +257,25 @@ void stopTimerA2(void){
 
 void initADC(void) {
     ADC12CTL0 &= ~ADC12ENC;
-    ADC12CTL0 = ADC12SHT0_9|ADC12REFON|ADC12ON;
-    ADC12CTL1 = ADC12SHP;
+    ADC12CTL0 = ADC12SHT0_9|ADC12REFON|ADC12ON|ADC12MSC;
+    ADC12CTL1 = ADC12SHP|ADC12CONSEQ_1;
     ADC12MCTL0 = ADC12SREF_0|ADC12INCH_0;
-    ADC12IE = BIT1;
+    ADC12MCTL1 = ADC12SREF_0|ADC12INCH_1|ADC12EOS;
+//    ADC12IE = BIT1;
 
+    P6SEL &= ~BIT1;
     P6SEL |= BIT0;
+    P6DIR &= ~BIT1;
     P6DIR |= BIT0;
     __delay_cycles(100);
     ADC12CTL0 |= ADC12ENC;
+}
+
+float getA1(void){
+    ADC12CTL0 |= ADC12SC;
+    while(ADC12CTL1 & ADC12BUSY);
+    int in_val = ADC12MEM1 & 0x0FFF;
+    return ((float)in_val)*3.3/4095;
 }
 
 void initDAC(void) {

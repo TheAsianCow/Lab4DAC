@@ -24,6 +24,7 @@ void main(void){
         mode = 0;
         triFlag = 0;
         unsigned char currBtn, currKey;
+        float DACval;
 
         for(;;){
             ADC12CTL0 |= ADC12SC;
@@ -38,6 +39,7 @@ void main(void){
             }
             else if(currBtn==BIT0){
                 mode = 1;
+                DACval = getA1();
                 Graphics_clearDisplay(&g_sContext);
                 Graphics_drawStringCentered(&g_sContext, "DC Voltage", AUTO_STRING_LENGTH, 48,48, OPAQUE_TEXT);
                 Graphics_flushBuffer(&g_sContext);

@@ -84,6 +84,7 @@ unsigned char getBtn(void);
 void startTimerA2(int freq);
 void stopTimerA2(void);
 void initADC(void);
+float getA1(void);
 
 void initDAC(void);
 void DACsend(unsigned int code);
