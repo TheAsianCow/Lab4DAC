@@ -246,7 +246,7 @@ void startTimerA2(int freq) {
     TA2CTL  = (TASSEL__ACLK|ID__1|MC__UP);
     if(mode==2) TA2CCR0 = 32768/freq/2-1;
     if(mode==3) TA2CCR0 = 32768/freq/50-1;
-    if (mode == 4) TA2CCR0 = 32768/freq;
+    if (mode == 4) TA2CCR0 = 32768/freq/50-1;
     TA2CCTL0 = CCIE; // IE
 }
 
@@ -340,6 +340,7 @@ __interrupt void TIMER1_A0_ISR (void)
 //------------------------------------------------------------------------------
 unsigned int triangleFlag = 0;
 unsigned int triDown = 1;
+unsigned int oldTimerCount = 0;
 
 #pragma vector=TIMER2_A0_VECTOR
 __interrupt void Timer_A2_ISR(void) {
@@ -353,14 +354,15 @@ __interrupt void Timer_A2_ISR(void) {
     if (mode == 4) {
         if (timerCount%50*82 == 0 && triangleFlag == 0) {
             triangleFlag = 1;
+            oldTimerCount = timerCount;
         }
         if (triangleFlag == 1) {
-            DACsend(timerCount - triDown%50*82);
-            triDown++;
-            if (timerCount - triDown%50*82 == 0){
+            if (oldTimerCount - triDown%50*82 == 0) {
                 triangleFlag = 0;
                 triDown = 1;
             }
+            DACsend(timerCount - triDown%50*82);
+            triDown++;
         }
         DACsend(timerCount%50*82);
     }
