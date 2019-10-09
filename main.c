@@ -45,7 +45,7 @@ void main(void){
                 Graphics_clearDisplay(&g_sContext);
                 Graphics_drawStringCentered(&g_sContext, "Square Wave", AUTO_STRING_LENGTH, 48,48, OPAQUE_TEXT);
                 Graphics_flushBuffer(&g_sContext);
-            }else if(currBtn==BIT2){
+            }else if(currBtn== BIT2){
                 mode = 3;
                 Graphics_clearDisplay(&g_sContext);
                 Graphics_drawStringCentered(&g_sContext, "Sawtooth Wave", AUTO_STRING_LENGTH, 48,48, OPAQUE_TEXT);
