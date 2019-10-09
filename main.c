@@ -19,21 +19,24 @@ void main(void){
         configKeypad();
         initADC();
         configBtn();
+        initDAC();
 
-        unsigned int mode = 0;
+        mode = 0;
         unsigned char currBtn, currKey;
 
         for(;;){
             ADC12CTL0 |= ADC12SC;
+            while(ADC12CTL1 & ADC12BUSY);
+            pos = ADC12MEM0 & 0x0FFF;
             currBtn = getBtn();
             currKey = getKey();
             if(currKey=='*'){
                 mode = 0;
+                stopTimerA2();
                 Graphics_clearDisplay(&g_sContext);
             }
             else if(currBtn==BIT0){
                 mode = 1;
-                DACsend(pos);
                 Graphics_clearDisplay(&g_sContext);
                 Graphics_drawStringCentered(&g_sContext, "DC Voltage", AUTO_STRING_LENGTH, 48,48, OPAQUE_TEXT);
                 Graphics_flushBuffer(&g_sContext);
@@ -62,6 +65,16 @@ void main(void){
                 Graphics_drawString(&g_sContext, "Button 4: ", AUTO_STRING_LENGTH, 10,70, OPAQUE_TEXT);
                 Graphics_drawString(&g_sContext, "Triangle Wave", AUTO_STRING_LENGTH, 10,80, OPAQUE_TEXT);
                 Graphics_flushBuffer(&g_sContext);
+            }
+            if(mode==1){
+//                initDAC();
+                stopTimerA2();
+                DACsend(pos);
+            }else if(mode==2){
+                startTimerA2(150);
+            }else if(mode==3){
+                startTimerA2(75);
+            }else if(mode==4){
             }
         }
 }

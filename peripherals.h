@@ -60,7 +60,8 @@
 
 // Globals
 extern tContext g_sContext;	// user defined type used by graphics library
-unsigned int pos;
+unsigned int pos, mode;
+unsigned long int timerCount;
 
 // Prototypes for functions defined implemented in peripherals.c
 
@@ -80,8 +81,10 @@ unsigned char getKey(void);
 void configBtn(void);
 unsigned char getBtn(void);
 
+void startTimerA2(int freq);
+void stopTimerA2(void);
 void initADC(void);
 
-void DACinit(void);
+void initDAC(void);
 void DACsend(unsigned int code);
 #endif /* PERIPHERALS_H_ */
