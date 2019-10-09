@@ -242,6 +242,18 @@ void configDisplay(void)
     Graphics_flushBuffer(&g_sContext);
 }
 
+void startTimerA2(int freq) {
+    TA2CTL  = (TASSEL__ACLK|ID__1|MC__UP);
+    if(mode==2) TA2CCR0 = 32768/freq/2-1;
+    if(mode==3) TA2CCR0 = 32768/freq/50-1;
+    TA2CCTL0 = CCIE; // IE
+}
+
+void stopTimerA2(void){
+    TA2CTL = MC_0;
+    TA2CCTL0 = ~CCIE;
+}
+
 void initADC(void) {
     ADC12CTL0 &= ~ADC12ENC;
     ADC12CTL0 = ADC12SHT0_9|ADC12REFON|ADC12ON;
@@ -322,7 +334,20 @@ __interrupt void TIMER1_A0_ISR (void)
 	// Not sure where Timer A1 is configured?
 	Sharp96x96_SendToggleVCOMCommand();  // display needs this toggle < 1 per sec
 }
-
+//------------------------------------------------------------------------------
+// Timer2 A0 Interrupt Service Routine
+//------------------------------------------------------------------------------
+#pragma vector=TIMER2_A0_VECTOR
+__interrupt void Timer_A2_ISR(void) {
+    if(mode==2){
+        if(timerCount%2==0)DACsend(pos);
+        else DACsend(0);
+    }
+    if(mode==3){
+       DACsend(timerCount%50*82);
+    }
+    timerCount++;
+}
 //------------------------------------------------------------------------------
 //ADC12 Interrupt Service Routine
 //------------------------------------------------------------------------------

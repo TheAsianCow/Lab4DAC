@@ -21,7 +21,7 @@ void main(void){
         configBtn();
         initDAC();
 
-        unsigned int mode = 0;
+        mode = 0;
         unsigned char currBtn, currKey;
 
         for(;;){
@@ -32,6 +32,7 @@ void main(void){
             currKey = getKey();
             if(currKey=='*'){
                 mode = 0;
+                stopTimerA2();
                 Graphics_clearDisplay(&g_sContext);
             }
             else if(currBtn==BIT0){
@@ -67,9 +68,12 @@ void main(void){
             }
             if(mode==1){
 //                initDAC();
+                stopTimerA2();
                 DACsend(pos);
             }else if(mode==2){
+                startTimerA2(150);
             }else if(mode==3){
+                startTimerA2(75);
             }else if(mode==4){
             }
         }
