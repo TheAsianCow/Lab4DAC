@@ -338,10 +338,6 @@ __interrupt void TIMER1_A0_ISR (void)
 //------------------------------------------------------------------------------
 // Timer2 A0 Interrupt Service Routine
 //------------------------------------------------------------------------------
-unsigned int triangleFlag = 0;
-unsigned int triDown = 1;
-unsigned int oldTimerCount = 0;
-
 #pragma vector=TIMER2_A0_VECTOR
 __interrupt void Timer_A2_ISR(void) {
     if(mode==2){
@@ -352,18 +348,19 @@ __interrupt void Timer_A2_ISR(void) {
         if(timerCount>53) timerCount=0;
         DACsend(timerCount*77);
     }
-    if (mode == 4) {
-        if (timerCount == 4095 && triangleFlag == 0) {
-            triangleFlag = 1;
+    if(mode == 4) {
+        if(timerCount>15 && triFlag == 0) {
+            triFlag = 1;
             timerCount = 0;
         }
-        if (triangleFlag == 1) {
-            DACsend((4095 - timerCount) * 77);
-            if (4095 - timerCount == 0){
-                triangleFlag = 0;
+        if(triFlag) {
+            DACsend((15-timerCount)*273);
+            if(timerCount>15){
+                triFlag = 0;
+                timerCount=0;
             }
         }
-        DACsend(timerCount*77);
+        else DACsend(timerCount*273);
     }
     timerCount++;
 }

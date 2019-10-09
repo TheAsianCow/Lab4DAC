@@ -22,6 +22,7 @@ void main(void){
         initDAC();
 
         mode = 0;
+        triFlag = 0;
         unsigned char currBtn, currKey;
 
         for(;;){
@@ -75,7 +76,7 @@ void main(void){
             }else if(mode==3){
                 startTimerA2(75);
             }else if(mode==4){
-                startTimerA2(75);
+                startTimerA2(150);
             }
         }
 }

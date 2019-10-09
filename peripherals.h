@@ -60,7 +60,7 @@
 
 // Globals
 extern tContext g_sContext;	// user defined type used by graphics library
-unsigned int pos, mode;
+unsigned int pos, mode, triFlag;
 unsigned long int timerCount;
 
 // Prototypes for functions defined implemented in peripherals.c
